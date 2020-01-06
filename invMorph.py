@@ -1,7 +1,6 @@
 import numpy as np
 from scipy.linalg import lu
 
-
 def shape_to_vector(shape_vertices):
     coords = [coord for vert in shape_vertices for coord in vert]
     return np.transpose(np.array([coords]))
@@ -51,7 +50,7 @@ class Solver:
         self.basis_matrix = np.hstack(basis_vs)
 
         # might want to notify user that certain shapes weren't used
-        unused_shape_inds = [i for i in range(0, len(self.morph_vs)) if i not in self.lin_indep_columns]
+        self.unused_shape_inds = [i for i in range(0, len(self.morph_vs)) if i not in self.lin_indep_columns]
 
         # do the Gram-Schmidt process on basis_vs to find an orthogonal basis for span(morph_vs)
         self.orth_basis_vs = gram_schmidt(basis_vs)
@@ -80,6 +79,3 @@ class Solver:
                 complete_xs.append(0)
 
         return complete_xs
-
-
-
