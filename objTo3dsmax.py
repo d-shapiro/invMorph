@@ -68,3 +68,5 @@ if len(desired_shapes) > 0:
     weights = solver2.solve(desired_shapes[0])
     for i in range(0, len(weights)):
         out.write("WM3_MC_SetValue$BASE.morpher " + str(i+1) + " " + str(weights[i] * 100) + "\n")
+
+out.close()

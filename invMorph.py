@@ -111,6 +111,8 @@ class Solver2:
         y_v = shape_v_to_morph(self.base_v, shape_to_vector(desired_shape))
         assert len(y_v) == len(self.base_v)
 
+        print(self.A)
+
         # Now solve Ax = y_v, to try to express y_v as a linear combination of the basis_vs
         soln = np.linalg.lstsq(self.A, y_v)
 
