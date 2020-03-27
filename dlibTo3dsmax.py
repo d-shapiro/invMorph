@@ -31,9 +31,21 @@ def parse_shapes(inp_files):
         shapes.append(parse_shape(inp_file))
     return shapes
 
+def script_shape(shape, var_name):
+    script = "vert_array = #()\nface_array = #()\n"
+    vert_count = len(shape)
+    for i in range(vert_count):
+        vert = shape[i]
+        script += "append vert_array [%f,%f,0]\n" % (vert[0], vert[1])
+        if i > 0 and i % 2 == 0:
+            script += "append face_array [%d,%d,%d]\n" % (i-1, i, i+1)
+    if vert_count % 2 == 0:
+        script += "append face_array [%d,%d,%d]\n" % (vert_count - 1, vert_count, 1)
+    script += "%s = mesh vertices:vert_array faces:face_array\n" % var_name
+    script += '%s.name = "%s"\n' % (var_name, var_name)
+    return script
+
 args = sys.argv
-# base_file = "base_and_targets"
-# desireds_file = "desireds"
 input_dir = "input"
 out_file = "out.ms"
 base_shape_name = "BASE"
@@ -64,15 +76,35 @@ desired_shapes = parse_shapes(desired_files)
 
 out = open(out_file, "w")
 
+out.write(script_shape(base_shape, base_shape_name))
+out.write("mymorpher = Morpher()\n")
+out.write("mymorpher.Use_Limits = 0\n")
+out.write("mymorpher.Autoload_of_targets = 1\n")
+out.write("addModifier %s mymorpher\n" % base_shape_name)
+out.write("\n")
+for i in range(len(targets)):
+    target_name = "TARGET_" + str(i+1)
+    out.write(script_shape(targets[i], target_name))
+    out.write("WM3_MC_BuildFromNode$%s.morpher %d $%s\n" % (base_shape_name, i+1, target_name))
+    out.write("\n")
+
+
 out.write("with animate on\n")
 out.write("(\n")
 for frame in range(0, len(desired_shapes)):
     des_shape = desired_shapes[frame]
     weights = solver.solve(des_shape)
     for i in range(0, len(weights)):
-        out.write("at time " + frame + " WM3_MC_SetValue$" + base_shape_name + ".morpher " + str(i+1) + " " + str(weights[i] * 100) + "\n")
+        out.write("at time %d WM3_MC_SetValue$%s.morpher %d %f\n" % (frame, base_shape_name, i+1, weights[i] * 100))
 
 out.write(")\n")
 
 out.close()
+
+out2 = open("desiredsInMax.ms", "w")
+for i in range(len(desired_shapes)):
+    out2.write(script_shape(desired_shapes[i], desired_files[i].split("/")[-1][:-4]))
+    out2.write("\n")
+
+out2.close()
 
