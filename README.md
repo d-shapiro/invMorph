@@ -20,15 +20,16 @@ The `input_directory` defaults to `input` and should contain directories named `
 
 The `out_file` defaults to `out.ms` and is the path to the output script.
 
-e.g. `python invMorph.py`
+### e.g.
+   `python invMorph.py`
 
-or   `python invMorph.py local/path/to/input`
+or `python invMorph.py local/path/to/input`
 
-or   `python invMorph.py C:\Users\You\absolute\path\to\input C:\Users\You\absolute\path\to\output.ms` 
+or `python invMorph.py C:\Users\You\absolute\path\to\input C:\Users\You\absolute\path\to\output.ms` 
 
 etc.
 
-# facePointsToMeshes.py
+## facePointsToMeshes.py
 
 Takes an input directory containing dlib faces (as individual .txt files), and outputs a maxScript that will create those faces in 3DSMax as editable meshes. The main purpose of this is sanity checking the "desired" faces that are being input into the invMorph program.
 
@@ -38,8 +39,9 @@ The `input_directory` defaults to `input/desired` and should contain .txt files 
 
 The `out_file` defaults to `out_2.ms` and is the path to the output script.
 
-e.g. `python facePointsToMeshes.py`
+### e.g. 
+   `python facePointsToMeshes.py`
 
-or   `python facePointsToMeshes.py C:\Users\You\Desktop\some_faces somefacesAsMeshes.ms`
+or `python facePointsToMeshes.py C:\Users\You\Desktop\some_faces somefacesAsMeshes.ms`
 
 etc.
